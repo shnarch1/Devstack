@@ -1,0 +1,26 @@
+version: '2.2'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    container_name: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=12345
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:Documents/Devstack
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - esnet
+volumes:
+  esdata:
+    driver: local
+
+networks:
+  esnet:
