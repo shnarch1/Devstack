@@ -12,7 +12,7 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - esdata:Documents/Devstack
+      - esdata:/home/avi/Documents/Devstack
     ports:
       - 9200:9200
       - 9300:9300

@@ -1,0 +1,2 @@
+nova --profile SECRET_KEY boot --flavor m1.tiny --image cirros-0.3.5-x86_64-disk avi
+osprofiler trace show --connection-string redis://localhost:6379 --html --out trace.html a2baf13d-def1-4b1a-adce-e73bf9d24af9

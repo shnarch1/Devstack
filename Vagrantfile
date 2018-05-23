@@ -4,8 +4,8 @@
 $script = <<SCRIPT
   sudo useradd -s /bin/bash -d /opt/stack -m stack
   echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
-  sudo -E su - stack -c  "git clone https://git.openstack.org/openstack-dev/devstack"
-  sudo -E su - stack -c "cp /opt/macbook/local.conf devstack/"
+  sudo -E su - stack -c  "git clone https://git.openstack.org/openstack-dev/devstack -b stable/queens"
+  sudo -E su - stack -c "cp /home/avi/Documents/Devstack/local.conf devstack/"
   sudo -E su - stack -c  "echo $HOST_IP"
   sudo -E su - stack -c  "cd devstack; \ 
                           export HOST_IP=`ifconfig | grep -i "inet addr"| grep -v 127.0.0.1 | grep -v 10.0.2.15 | awk {'print $2'} | cut -d: -f2`; \
@@ -26,8 +26,8 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "ubuntu/xenial64"
   config.vm.hostname = "devstack"
-  config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.synced_folder "./", "/opt/macbook"
+  config.vm.network "forwarded_port", guest: 80, host: 8081
+  config.vm.synced_folder "./", "/home/avi/Documents/Devstack"
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -49,14 +49,17 @@ Vagrant.configure("2") do |config|
   # Example for VirtualBox:
   #
 
-  config.vm.provision "shell", inline: $script
+   config.vm.provision "shell", inline: "sudo sed -i 's/archive.ubuntu.com/il.archive.ubuntu.com/g' /etc/apt/sources.list"
+   config.vm.provision "shell", inline: "sudo sed -i 's/deb-src/#deb-src/g' /etc/apt/sources.list"
 
+  #config.vm.provision "shell", inline: "apt-get update -y"
+  config.vm.provision "shell", inline: $script
 
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
     vb.name="devstack"
     vb.cpus = 4
-    vb.memory = 8192
+    vb.memory = 16384
   end
   #
   # View the documentation for the provider you are using for more
